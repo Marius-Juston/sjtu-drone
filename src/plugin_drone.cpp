@@ -38,15 +38,24 @@ void DroneSimpleController::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   
   world = _model->GetWorld();
   ROS_INFO("The drone plugin is loading!");
+    // load parameters
+  if (_sdf->HasElement("robotNamespace")) {
+    this->ns = _sdf->GetElement("robotNamespace")->Get<std::string>() + "/";
+  } else {
+    this->ns.clear();
+  }
+
+  ROS_INFO("The pluging namesapce:");
+  ROS_INFO(ns.c_str());
   
   //load parameters
-  cmd_normal_topic_ = "/cmd_vel";
-  takeoff_topic_ = "drone/takeoff";
-  land_topic_ = "drone/land";
-  reset_topic_ = "drone/reset";
-  posctrl_topic_ = "drone/posctrl";
-  gt_topic_ = "drone/gt_pose";
-  switch_mode_topic_ = "/drone/vel_mode";
+  cmd_normal_topic_ = ns + "cmd_vel";
+  takeoff_topic_ = ns + "drone/takeoff";
+  land_topic_ = ns + "drone/land";
+  reset_topic_ = ns + "drone/reset";
+  posctrl_topic_ = ns + "drone/posctrl";
+  gt_topic_ = ns + "drone/gt_pose";
+  switch_mode_topic_ = ns + "drone/vel_mode";
   
   if (!_sdf->HasElement("imuTopic"))
     imu_topic_.clear();

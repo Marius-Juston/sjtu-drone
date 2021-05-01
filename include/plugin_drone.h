@@ -121,6 +121,9 @@ private:
 
   // Pointer to the update event connection
   event::ConnectionPtr updateConnection;
+
+  // The robot namespace
+  std::string ns;
 };
 
 }
