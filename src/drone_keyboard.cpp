@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "drone_keyboard");
+  ros::init(argc, argv, "drone_keyboard", ros::init_options::AnonymousName);
 
   ros::V_string output;
 
