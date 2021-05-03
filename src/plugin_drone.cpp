@@ -40,27 +40,30 @@ void DroneSimpleController::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   ROS_INFO("The drone plugin is loading!");
     // load parameters
   if (_sdf->HasElement("robotNamespace")) {
-    this->ns = _sdf->GetElement("robotNamespace")->Get<std::string>() + "/";
+    this->ns = "/" +  _sdf->GetElement("robotNamespace")->Get<std::string>() + "/";
   } else {
     this->ns.clear();
+    ns = "/";
   }
 
-  ROS_INFO("The pluging namesapce:");
+  ROS_INFO("Thse pluging namesapce 1.0:");
   ROS_INFO(ns.c_str());
   
   //load parameters
-  cmd_normal_topic_ = ns + "cmd_vel";
-  takeoff_topic_ = ns + "drone/takeoff";
-  land_topic_ = ns + "drone/land";
-  reset_topic_ = ns + "drone/reset";
-  posctrl_topic_ = ns + "drone/posctrl";
-  gt_topic_ = ns + "drone/gt_pose";
-  switch_mode_topic_ = ns + "drone/vel_mode";
+  cmd_normal_topic_ =  ns + "cmd_vel";
+  takeoff_topic_ =ns + "takeoff";
+  land_topic_ = ns + "land";
+  reset_topic_ =  ns + "reset";
+  posctrl_topic_ = ns +  "posctrl";
+  gt_topic_ = ns + "gt_pose";
+  switch_mode_topic_ = ns +  "vel_mode";
   
   if (!_sdf->HasElement("imuTopic"))
     imu_topic_.clear();
   else
     imu_topic_ = _sdf->GetElement("imuTopic")->Get<std::string>();
+
+  imu_topic_ = ns + imu_topic_;
   
   
   if (!_sdf->HasElement("bodyName"))
@@ -188,11 +191,11 @@ void DroneSimpleController::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   }
   
   if (!gt_topic_.empty()){
-      pub_gt_pose_ = node_handle_->advertise<geometry_msgs::Pose>("drone/gt_pose",1024);    
+      pub_gt_pose_ = node_handle_->advertise<geometry_msgs::Pose>(ns + "gt_pose",1024);    
   }
   
-  pub_gt_vec_ = node_handle_->advertise<geometry_msgs::Twist>("drone/gt_vel", 1024);
-  pub_gt_acc_ = node_handle_->advertise<geometry_msgs::Twist>("drone/gt_acc", 1024);
+  pub_gt_vec_ = node_handle_->advertise<geometry_msgs::Twist>(ns + "gt_vel", 1024);
+  pub_gt_acc_ = node_handle_->advertise<geometry_msgs::Twist>(ns + "gt_acc", 1024);
   
   
   if (!switch_mode_topic_.empty()){
@@ -277,6 +280,8 @@ void DroneSimpleController::ImuCallback(const sensor_msgs::ImuConstPtr& imu)
 
 void DroneSimpleController::TakeoffCallback(const std_msgs::EmptyConstPtr& msg)
 {
+  ROS_INFO("State:%d Namespace:%s\n",navi_state, ns.c_str());
+
   if(navi_state == LANDED_MODEL)
   {
     navi_state = TAKINGOFF_MODEL;

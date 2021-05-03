@@ -13,10 +13,10 @@
 
 class DroneObjectROS {
 protected:
-  DroneObjectROS() {}
+  DroneObjectROS(): ns("/") {}
 
 public:
-  DroneObjectROS(ros::NodeHandle &node) { initROSVars(node); }
+  DroneObjectROS(ros::NodeHandle &node, std::string ns = "/"): ns(ns) { initROSVars(node); }
 
   bool isFlying;
   bool isPosctrl;
@@ -51,6 +51,9 @@ public:
   bool roll(float speed = 0.2);
   bool rise(float speed = 0.1);
   bool yaw(float speed = 0.1);
+
+  private:
+    const std::string ns;
 };
 
 #endif // ARDRONE_ROS_H

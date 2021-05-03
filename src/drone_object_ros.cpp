@@ -4,12 +4,12 @@ void DroneObjectROS::initROSVars(ros::NodeHandle &node) {
   isFlying = false;
   isPosctrl = false;
   isVelMode = false;
-  pubTakeOff = node.advertise<std_msgs::Empty>("/drone/takeoff", 1024);
-  pubLand = node.advertise<std_msgs::Empty>("/drone/land", 1024);
-  pubReset = node.advertise<std_msgs::Empty>("/drone/reset", 1024);
-  pubPosCtrl = node.advertise<std_msgs::Bool>("/drone/posctrl", 1024);
-  pubCmd = node.advertise<geometry_msgs::Twist>("/cmd_vel", 1024);
-  pubVelMode = node.advertise<std_msgs::Bool>("/drone/vel_mode", 1024);
+  pubTakeOff = node.advertise<std_msgs::Empty>(ns + "takeoff", 1024);
+  pubLand = node.advertise<std_msgs::Empty>( ns + "land", 1024);
+  pubReset = node.advertise<std_msgs::Empty>( ns + "reset", 1024);
+  pubPosCtrl = node.advertise<std_msgs::Bool>( ns + "posctrl", 1024);
+  pubCmd = node.advertise<geometry_msgs::Twist>( ns + "cmd_vel", 1024);
+  pubVelMode = node.advertise<std_msgs::Bool>( ns + "vel_mode", 1024);
 }
 
 bool DroneObjectROS::takeOff() {
